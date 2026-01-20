@@ -228,19 +228,31 @@ def launch_app(
     adb_prefix = _get_adb_prefix(device_id)
     package = APP_PACKAGES[app_name]
 
-    subprocess.run(
-        adb_prefix
-        + [
-            "shell",
-            "monkey",
-            "-p",
-            package,
-            "-c",
-            "android.intent.category.LAUNCHER",
-            "1",
-        ],
-        capture_output=True,
-    )
+    # Try 1: Monkey with LAUNCHER category
+    monkey_cmd = adb_prefix + [
+        "shell",
+        "monkey",
+        "-p",
+        package,
+        "-c",
+        "android.intent.category.LAUNCHER",
+        "1",
+    ]
+    result = subprocess.run(monkey_cmd, capture_output=True, text=True)
+
+    # Check if monkey successfully injected the event
+    # Standard success output contains "Events injected: 1"
+    if "Events injected: 1" in result.stdout:
+        time.sleep(delay)
+        return True
+
+    print(f"Monkey launch failed for {package}, trying 'am start'...")
+
+    # Try 2: am start <package>
+    # This works on many devices where monkey fails or for system apps
+    am_cmd = adb_prefix + ["shell", "am", "start", package]
+    subprocess.run(am_cmd, capture_output=True)
+
     time.sleep(delay)
     return True
 

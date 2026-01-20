@@ -1,6 +1,7 @@
 """App name to package name mapping for supported applications."""
 
 APP_PACKAGES: dict[str, str] = {
+    "应用宝": "com.tencent.android.qqdownloader",
     # Social & Messaging
     "微信": "com.tencent.mm",
     "QQ": "com.tencent.mobileqq",
@@ -185,6 +186,8 @@ APP_PACKAGES: dict[str, str] = {
     "wechat": "com.tencent.mm",
     "Whatsapp": "com.whatsapp",
     "WhatsApp": "com.whatsapp",
+    "设置": "com.android.settings",
+    "系统设置": "com.android.settings"
 }
 
 
